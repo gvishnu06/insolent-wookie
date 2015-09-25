@@ -1,0 +1,31 @@
+extends layout
+
+block content
+	.container
+		h1 
+			a(href="http://localhost:3000/feedback") Reports/
+			a(href="") Analytics
+		br
+		br
+		form(name= "feedback" role="form" method="get" action = "http://localhost:3000/analytics")
+			.form-group
+				label(for="orgName") Organization Name:
+				select(name="orgName").form-control
+					each obj in populate
+						option(value=obj._id.orgName) #{obj._id.orgName}
+				br
+				input.btn.btn-info(type="submit", value="Find")
+				br
+		.table-responsive
+			table.table.table-bordered
+				thead
+					tr
+						th EasyForMe
+						th Flexibility
+						th OverallExperience
+				tbody
+					each obj in result
+						tr
+							td=obj.easyForMe
+							td=obj.flexibility
+							td=obj.overallExperience

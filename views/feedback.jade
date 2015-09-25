@@ -1,0 +1,59 @@
+extends layout
+
+block content
+	script.
+		function redirect(x){
+			populate_ob=!{populate_json};
+			var populateDoc = document.feedback.interviewName;
+			for (m=populateDoc.options.length-1;m>=0;m--) //null for all
+				populateDoc.options[m]=null;
+			populateDoc.options[0]=new Option('All Interviews','');
+			for(i = 0; i< populate_ob.length;i++){
+				if(x == populate_ob[i]._id.orgName){
+					for(j=0; j<populate_ob[i].intName.length; j++)
+					{
+						opt=new Option(populate_ob[i].intName[j],populate_ob[i].intName[j]);
+						populateDoc.add(opt);
+					}
+				}
+			}
+		}
+	.container
+		h1 
+			a(href="") Reports/
+			a(href="http://localhost:3000/analytics") Analytics
+		br
+		br
+		form(name= "feedback" role="form" method = "get" action="http://localhost:3000/feedback")
+			.form-group
+				label(for="orgName") Organization Name:
+				select(name='orgName' onChange='redirect(this.options[selectedIndex].value)').form-control()
+					each obj in populate
+						option(value=obj._id.orgName) #{obj._id.orgName}
+				label(for="interviewName") Interview Name:
+				select(name="interviewName").form-control
+				br
+				input.btn.btn-info(type="submit", value="Find")
+				br
+		.table-responsive
+			table.table.table-bordered
+				thead
+					tr
+						th Company
+						th Interview
+						th EasyForMe
+						th Flexibility
+						th OverallExperience
+				tbody
+					each obj in result
+						tr
+							td=obj._id.orgName
+							td=obj._id.interviewName
+							td=obj.easyForMe
+							td=obj.flexibility
+							td=obj.overallExperience
+		-var i=0
+		ul.pagination
+			while i++< totalPages
+				li 
+					a.page(href="http://localhost:3000/feedback?orgName="+orgName+"&page="+i+"&interviewName="+interName)=i
